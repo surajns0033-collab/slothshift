@@ -43,32 +43,36 @@ The model prepares suggestions; the user makes the decisions. No document is con
 
 ## Features
 
-- **Real folder scanning** — choose a source directory through a native desktop dialog; SlothShift recursively discovers supported text files.
+- **Real folder scanning** — choose a source directory through a native desktop dialog; SlothShift recursively discovers common text, PDF, DOCX, XLSX, email and RTF/HTML files.
 - **Local Gemma inference** — use an installed Ollama model to generate a summary, proposed filename, category, evidence excerpt, possible dates, next steps, warnings, and an optional draft response.
 - **Human review** — inspect the model's suggestion, edit the proposed filename or category, then approve or reject it.
 - **Copy-only export** — approved files are copied to a separate destination; the originals are not renamed, moved, or deleted.
 - **Export integrity checks** — compare SHA-256 hashes after copying and stop when a source file changed after analysis.
-- **Useful artifacts** — create a manifest, a README for the exported pack, optional draft notes, and an ICS calendar file for dates in an unambiguous YYYY-MM-DD format.
+- **Actionable export pack** — create organized source copies, per-file Markdown handoff notes with next steps and evidence excerpts, a hash manifest, optional response drafts, and an ICS calendar file for clear ISO dates.
 - **Persistent local state** — restore the last source folder, review queue, settings, and export history from the app's local user-data directory.
 - **Animated, reduced-motion-aware UI** — a calm night-shift visual style with lightweight transitions and a prefers-reduced-motion fallback.
+- **One-click sample vault** — generate clearly synthetic invoice, meeting, expense and email files and send them through the same live local-model pipeline; AI results are never mocked.
+- **Format-aware extraction** — read text-based PDFs, DOCX, XLSX, EML, HTML and RTF as well as common text formats.
+- **Per-file selection and skip reporting** — choose which files to analyze and see common unsupported extensions after a scan.
+- **Evidence mismatch warning** — flag a model-proposed evidence quote that cannot be found in extracted source text.
 - **No simulated AI fallback** — if Ollama or the selected model is unavailable, the app reports an error instead of presenting fabricated analysis.
 
 ## Supported file types and current limits
 
-This release focuses on small, text-based files.
+SlothShift extracts text from common documents, but does not run OCR or understand image-only files. It caps scanning at **300 supported files** per pass, limits each input file to **10 MB**, and sends at most 20,000 extracted characters per document to the model.
 
 | Format | Supported | Notes |
 | --- | :---: | --- |
-| TXT | Yes | UTF-8 text is recommended |
-| Markdown (.md) | Yes | Treated as document text |
-| CSV | Yes | Parsed as text |
-| JSON | Yes | Parsed as text |
-| LOG | Yes | Parsed as text |
-| PDF / scanned PDF | No | PDF extraction and OCR are not included |
-| DOCX / XLSX | No | Office document extraction is not included |
-| JPG / PNG | No | Image understanding is not included in this release |
+| TXT, MD, CSV, JSON, LOG | Yes | UTF-8 text recommended |
+| PDF | Yes | Text-based PDFs only; scanned/image-only PDF OCR is not included |
+| DOCX | Yes | Extracts document text, not layout-perfect formatting |
+| XLSX | Yes | Extracts worksheet cell values |
+| EML | Yes | Extracts common email headers and body text |
+| HTML / HTM | Yes | Removes scripts and markup before analysis |
+| RTF | Yes | Best-effort text extraction |
+| XLS, DOC, PPTX, JPG, PNG | No | Not supported in this release |
 
-Current safeguards include a maximum scan of **300 files** per pass and a **2 MB per-file** analysis limit. The prompt includes up to 20,000 characters of extracted text per document. Files that are too large, empty, unreadable, or unsupported should not be treated as successfully analyzed.
+A supported extension is not a guarantee a file is readable: encrypted, malformed, blank, or scanned-only documents may still fail extraction. Unsupported extensions are summarized after scanning.
 
 The default model is **gemma4:e2b**. Other models can be selected when they are installed in the local Ollama instance; compatibility depends on the model's structured-output support.
 
@@ -108,7 +112,7 @@ Model and dependency downloads require internet access. The model remains on you
 npm start
 ~~~
 
-When the app opens, check that Ollama is connected, choose a folder with supported files, and select **Run Night Shift**. Inspect the suggestions before approving anything. When ready, export approved copies to a destination outside the source folder.
+When the app opens, try **Try a sample vault** for a safe first run or choose a real folder. Select which files to analyze, click **Run Night Shift**, then open each suggestion with **Review**. Approve only results you trust and export to a destination outside the source folder. The sample vault uses the actual installed model, not canned AI output.
 
 ## Typical workflow
 
@@ -116,7 +120,7 @@ When the app opens, check that Ollama is connected, choose a folder with support
 2. **Run Night Shift.** Supported files are passed to the locally installed model one at a time. Processing failures are reported per file.
 3. **Review the evidence.** Check the summary and source excerpt, refine the name/category and next steps, and review proposed dates carefully.
 4. **Approve or reject.** Only approved, analyzed items are eligible for export.
-5. **Export a Lazy Pack.** Choose a destination outside the source folder. SlothShift creates a timestamped pack with organized copies and a manifest.
+5. **Export a Lazy Pack.** Choose a destination outside the source folder. SlothShift creates a timestamped pack with organized copies, per-file Markdown handoff notes, a manifest, and optional reminder/draft files.
 
 An export has this general structure:
 
@@ -128,6 +132,7 @@ SlothShift-Lazy-Pack-<timestamp>/
 │   ├── Personal/
 │   ├── Reference/
 │   └── Archive/
+├── notes/                      # next steps, evidence excerpts, warnings per file
 ├── drafts/                     # only when a draft is present
 ├── reminders.ics               # only when a clear date is present
 ├── slothshift_manifest.json
@@ -209,7 +214,7 @@ The model must appear in **ollama list**. Pull the exact model tag configured in
 
 ### A file fails analysis
 
-Check that the format is supported, the file is below the 2 MB limit, and it contains readable text. Empty, unsupported, or oversized files will not produce valid analysis. If Gemma returns malformed structured output, retry and review any repeated failure.
+Check that the format is supported, the file is below the 10 MB limit, and it contains extractable text. Scanned PDFs do not have OCR. Empty, unsupported, or oversized files will not produce valid analysis. If Gemma returns malformed structured output, retry and review any repeated failure.
 
 ### A file changed after analysis
 

@@ -3,6 +3,7 @@ contextBridge.exposeInMainWorld('sloth', Object.freeze({
   status:()=>ipcRenderer.invoke('sloth:status'),
   chooseSource:()=>ipcRenderer.invoke('sloth:choose-source'),
   chooseDestination:()=>ipcRenderer.invoke('sloth:choose-destination'),
+  createSample:()=>ipcRenderer.invoke('sloth:create-sample'),
   scan:(folder)=>ipcRenderer.invoke('sloth:scan',folder),
   analyze:(ids,model)=>ipcRenderer.invoke('sloth:analyze',ids,model),
   exportPack:(payload)=>ipcRenderer.invoke('sloth:export',payload),

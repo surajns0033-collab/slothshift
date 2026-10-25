@@ -8,11 +8,15 @@ tags: devchallenge, hf26challenge
 
 ## What I Built
 
-SlothShift turns neglected text documents into reviewable work. Choose a folder, run a locally installed Gemma model through Ollama, inspect summaries and suggested next steps, approve or reject the actions, and export safe copies with an evidence manifest and calendar reminders for clear dates.
+SlothShift is a local AI night worker for the small admin tasks that quietly accumulate: identifying a document, figuring out what matters, giving it a sensible name, spotting a stated deadline, and deciding what to do next.
+
+Choose a folder, run your installed Gemma model through Ollama, inspect every result, edit the proposed filename/category/next steps, and approve only what you trust. SlothShift exports copies plus per-document Markdown handoff notes, a source-integrity manifest, optional response drafts, and calendar reminders for explicit dates.
+
+The first-run sample vault creates clearly synthetic invoice, meeting, expense and email files. They go through the same live-model pipeline as real files; there are no prewritten model results pretending to be AI.
 
 ## Demo
 
-Record a real run with a local Ollama model: scan a folder, analyze a file, review and edit its suggestion, approve it, and export a Lazy Pack. Do not claim results that were not tested.
+**Before publishing:** attach a real 60–90 second screen recording or demo URL. Show the sample vault, a successful local Gemma analysis, one reviewed/approved item, and the exported notes plus manifest. Do not claim a run has succeeded until you have recorded it on the actual machine.
 
 ## Code
 
@@ -20,20 +24,22 @@ https://github.com/surajns0033-collab/slothshift
 
 ## How I Built It
 
-A secured Electron desktop app uses native folder selection, a limited preload API, safe path checks, local file parsing and local Ollama inference. Review history persists on-device. Export copies approved source bytes into a separate destination and verifies hashes.
+The Electron desktop app uses a narrow preload bridge, native folder dialogs, local parsing for TXT/MD/CSV/JSON/LOG, text-based PDF, DOCX, XLSX, EML, HTML and RTF extraction, and Ollama's localhost API for structured Gemma output. The review queue makes AI suggestions explicit. Export copies the original bytes, verifies SHA-256, and records suggestions in Markdown handoff notes and a JSON manifest.
+
+The scanner skips hidden entries and symbolic links, caps a run at 300 supported files and 10 MB per input, and limits model context to 20,000 extracted characters per file. Unsupported formats and image-only PDF OCR are called out instead of silently treated as understood.
 
 ## Why Does Open Innovation Matter?
 
-The model runs on the user's own computer rather than a hosted AI endpoint. That keeps document content away from a third-party inference service, avoids per-request hosted inference fees, lets users switch locally installed models, and supports offline work after setup and model download.
+The model runs on the user's computer rather than a hosted inference API. After model/dependency setup, document content can be processed locally, without a per-call hosted inference bill or the need to upload private files to an AI service. Because the runtime is local, people can choose among installed compatible models and inspect the code handling their files. The trade-off is transparent: inference depends on local hardware, and downloading model weights takes disk space and internet access.
 
-## My Agent Session
+## The Human-in-the-Loop Promise
 
-Add a DevRelay session after recording a real build session.
+SlothShift does not rename, move, or delete source files. A model suggestion is not a completed action: users inspect the summary and evidence excerpt, edit the result, then approve or reject it. The app warns when a proposed evidence quote cannot be found in extracted source text. Important deadlines and financial decisions still need human verification.
 
 ## The Lazy Payoff
 
-Measure time saved with a real folder before making claims. The application uses an adjustable estimate of manual work per file and labels it as an estimate, not a user study.
+The goal is to reduce repeated low-value decisions around digital clutter. The dashboard only counts estimated minutes for approved items, using a user-adjustable assumption rather than claiming a measured user study. Add a real time-saved result only after timing a real folder and recording the number of approved files.
 
 ## Prize Categories
 
-Target: Best Use of Gemma after confirming a successful real Gemma inference run.
+**Best Use of Gemma** — enter this category only after recording and verifying a successful real local Gemma inference run.
