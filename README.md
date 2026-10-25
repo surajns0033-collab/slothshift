@@ -76,6 +76,20 @@ A supported extension is not a guarantee a file is readable: encrypted, malforme
 
 The default model is **gemma4:e2b**. Other models can be selected when they are installed in the local Ollama instance; compatibility depends on the model's structured-output support.
 
+## Run in a browser on localhost
+
+This project supports two launch modes. Use the browser mode below when you want to inspect the interface in Chrome instead of opening an Electron window. It still calls the **real Ollama service on your own machine**; it does not use canned AI output or a hosted LLM.
+
+```powershell
+npm install
+ollama pull gemma4:e2b
+npm run dev
+```
+
+Open the local address printed by Vite (normally `http://127.0.0.1:5173`) and click **Try a sample vault**. The browser asks for local folder access only when you choose a real folder. It keeps file content in browser memory and downloads an export ZIP; it does not upload documents. Browser mode supports TXT, MD, CSV, JSON, LOG, EML, HTML, HTM and RTF. The Electron desktop mode additionally supports PDF text extraction, DOCX and XLSX.
+
+If the browser reports a CORS error connecting to Ollama, allow the local Vite origin in Ollama's `OLLAMA_ORIGINS` setting and restart Ollama. Do not expose the Ollama API to the public internet.
+
 ## Quick start
 
 ### Prerequisites
