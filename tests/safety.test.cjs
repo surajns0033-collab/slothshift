@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict');const {sanitizeFilename,isWithin,icsDate,icsEscape}=require('../electron/main.cjs');
+test('filename sanitization keeps extension and removes unsafe characters',()=>{assert.equal(sanitizeFilename('invoice:may?.txt'),'invoice-may-.txt');assert.equal(sanitizeFilename('notes.md'),'notes.md')});
+test('path guard rejects traversal, roots, and sibling paths',()=>{assert.equal(isWithin('/tmp/source','/tmp/source/a.txt'),true);assert.equal(isWithin('/tmp/source','/tmp/source/../other/a.txt'),false);assert.equal(isWithin('/tmp/source','/tmp/source'),false)});
+test('calendar dates must be real ISO calendar dates',()=>{assert.equal(icsDate('2026-10-25'),'20261025');assert.equal(icsDate('2026-02-30'),null);assert.equal(icsDate('tomorrow'),null)});
+test('calendar field escaping protects delimiter and newlines',()=>{assert.equal(icsEscape('A, B; C\nD'),'A\\, B\\; C\\nD')});
