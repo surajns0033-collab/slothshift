@@ -70,8 +70,10 @@ async function extractText(extension, buffer) {
     return ['Subject: ' + (email.subject || ''), 'From: ' + (email.from?.text || ''), 'To: ' + (email.to?.text || ''), 'Date: ' + (email.date ? email.date.toISOString() : ''), '', body].join('\n').trim();
   }
   if (ext === '.pdf') {
+    // pdf-parse's documented CommonJS worker setup needs to be loaded before the parser.
+    const { CanvasFactory } = require('pdf-parse/worker');
     const { PDFParse } = require('pdf-parse');
-    const parser = new PDFParse({ data: buffer });
+    const parser = new PDFParse({ data: buffer, CanvasFactory });
     try {
       const result = await parser.getText();
       return String(result.text || '').slice(0, 50000);

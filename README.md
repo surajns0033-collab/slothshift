@@ -86,9 +86,9 @@ ollama pull gemma4:e2b
 npm run dev
 ```
 
-Open the local address printed by Vite (normally `http://127.0.0.1:5173`) and click **Try a sample vault**. The browser asks for local folder access only when you choose a real folder. It keeps file content in browser memory and downloads an export ZIP; it does not upload documents. Browser mode supports TXT, MD, CSV, JSON, LOG, EML, HTML, HTM and RTF. The Electron desktop mode additionally supports PDF text extraction, DOCX and XLSX.
+Open the local address printed by Vite (normally `http://127.0.0.1:5173`) and click **Try a sample vault**. The browser asks for local folder access only when you choose a real folder. It keeps file content and the active review queue in browser memory and downloads an export ZIP; it does not upload documents. Refreshing the browser clears the current file queue, so finish reviewing/exporting before refresh. Only basic settings and recent export history are kept in local storage. Browser mode supports TXT, MD, CSV, JSON, LOG, EML, HTML, HTM and RTF. The Electron desktop mode additionally supports PDF text extraction, DOCX and XLSX.
 
-If the browser reports a CORS error connecting to Ollama, allow the local Vite origin in Ollama's `OLLAMA_ORIGINS` setting and restart Ollama. Do not expose the Ollama API to the public internet.
+If the browser reports a CORS error connecting to Ollama, allow the local Vite origin in Ollama's `OLLAMA_ORIGINS` setting and restart Ollama. On Windows, add `http://127.0.0.1:5173` to the existing `OLLAMA_ORIGINS` value in your user environment variables, then fully quit and restart Ollama. Keep any existing origin values you need. Do not expose the Ollama API to the public internet.
 
 ## Quick start
 
