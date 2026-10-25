@@ -21,6 +21,7 @@
     "productName": "SlothShift",
     "files": [
       "index.html",
+      "renderer.js",
       "electron/**/*",
       "tests/**/*",
       "package.json"
