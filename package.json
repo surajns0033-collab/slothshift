@@ -10,11 +10,10 @@
     "check": "node --check electron/main.cjs && node --check electron/preload.cjs && node --check renderer.js && node --check electron/safety.cjs",
     "dist:win": "electron-builder --win nsis"
   },
-  "dependencies": {
-    "electron": "^33.2.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^26.18.0",
+    "electron": "^45.0.0"
   },
   "build": {
     "appId": "dev.slothshift.desktop",
