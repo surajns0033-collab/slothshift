@@ -21,3 +21,27 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-acti
 $('approve').onclick=async()=>{try{edit();$('review').close();await decision(reviewId,'approved')}catch(e){toast(e.message,true)}};$('reject').onclick=()=>{const id=reviewId;$('review').close();decision(id,'rejected')};
 $('search').oninput=render;$('filter').onchange=render;$('minutes').oninput=e=>$('minute-label').textContent=e.target.value;$('save-minutes').onclick=async()=>{S.settings.manualMinutes=Number($('minutes').value);await persist();render();toast('Estimate updated. It is not a measured user study.')};
 (async()=>{try{Object.assign(S,await api.load());S.settings={model:DEFAULT,manualMinutes:2,...S.settings};$('minutes').value=S.settings.manualMinutes;$('minute-label').textContent=S.settings.manualMinutes;render();await refresh()}catch(e){toast('Could not restore local state: '+e.message,true)}})();
+
+// Export button is created here so it remains wired to the same persistent app state.
+const exportButton=document.createElement('button');
+exportButton.className='btn primary';
+exportButton.textContent='Export approved ↗';
+exportButton.id='export-approved';
+const toolbarRow=document.querySelector('.toolbar .row');
+if(toolbarRow) toolbarRow.insertBefore(exportButton,toolbarRow.firstChild);
+exportButton.addEventListener('click',async()=>{
+  const approved=S.files.filter(f=>f.status==='approved'&&f.analysis);
+  if(!approved.length){toast('Approve at least one analyzed file before exporting.');return;}
+  if(!S.sourceFolder){toast('Choose and scan a source folder first.',true);return;}
+  try{
+    const destination=await api.chooseDestination();
+    if(!destination)return;
+    busy(true);
+    const result=await api.exportPack({sourceFolder:S.sourceFolder,destination,files:approved});
+    S.history.push(result);
+    await persist();
+    render();
+    toast('Lazy Pack created: '+result.count+' files, '+result.reminders+' reminders.');
+  }catch(e){toast('Export failed: '+e.message,true);}
+  finally{busy(false);await refresh();}
+});
