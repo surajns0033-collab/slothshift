@@ -23,6 +23,7 @@ Unlike a cloud-first assistant, SlothShift sends document content to **Ollama on
 | | |
 | --- | --- |
 | **Product** | Local-first AI desktop utility |
+| **Modes** | Electron desktop app + local browser preview |
 | **Desktop shell** | Electron |
 | **Interface** | HTML, CSS, and JavaScript |
 | **Model runtime** | [Ollama](https://ollama.com/) |
@@ -177,7 +178,7 @@ flowchart TD
 - **Preload bridge** — exposes a narrow set of IPC functions to the renderer.
 - **Renderer** — the desktop UI, review controls, progress, status, and settings.
 - **Safety helpers** — filename sanitization, path containment, hashing, and calendar value formatting.
-- **GitHub Actions** — runs automated safety tests and JavaScript syntax checks on pushes and pull requests.
+- **GitHub Actions** — runs safety/extractor/ZIP tests, JavaScript syntax checks, and a production browser build on pushes and pull requests.
 
 ## Privacy and security model
 
